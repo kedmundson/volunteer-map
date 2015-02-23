@@ -12,7 +12,7 @@
     getData: function() {
       // add &query parameter to concatenate to baseURL
       // build api call:
-      // use $.ajax beforeSend to add HTTP header with auth info
+      // use $.ajax headers to add auth info
       $.getJSON(model.baseURL, function(data) {
       });
     },
