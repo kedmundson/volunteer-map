@@ -1,7 +1,9 @@
 (function () {
 
   var model = {
-    baseURL: 'http://www.volunteermatch.org/api/call?action=helloWorld'
+    baseURL: 'http://www.volunteermatch.org/api/call?action=helloWorld&query="{\"name\":\"Kate\"}"',
+
+    usernameToken: ''
   };
   
   var controller = {
@@ -10,11 +12,17 @@
     },
 
     getData: function() {
-      // add &query parameter to concatenate to baseURL
-      // build api call:
-      // use $.ajax headers to add auth info
-      $.getJSON(model.baseURL, function(data) {
-      });
+      $.ajax({
+          type: 'GET',
+          url: model.baseURL,
+          headers: {
+            'Authorization': 'WSSE profile="UsernameToken"',
+            'X-WSSE': model.usernameToken
+          }
+        })
+        .done(function(data) {
+          console.log(data);
+        });
     },
 
     showResults: function() {}
