@@ -1,8 +1,7 @@
 (function () {
 
   var model = {
-    baseURL: 'http://www.volunteermatch.org/api/call?action=helloWorld&query="{\"name\":\"Kate\"}"',
-
+    wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json',
     usernameToken: ''
   };
   
@@ -13,12 +12,7 @@
 
     getData: function() {
       $.ajax({
-          type: 'GET',
-          url: model.baseURL,
-          headers: {
-            'Authorization': 'WSSE profile="UsernameToken"',
-            'X-WSSE': model.usernameToken
-          }
+          url: model.wifiURL
         })
         .done(function(data) {
           console.log(data);
@@ -32,7 +26,7 @@
   var view = {
     init: function() {
       var $results = $('#results');
-      // controller.getData();
+      controller.getData();
     }
 
   };
