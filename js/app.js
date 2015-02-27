@@ -1,3 +1,5 @@
+// Based on info from: https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn
+
 (function () {
 
   var model = {

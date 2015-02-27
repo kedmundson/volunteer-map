@@ -1,0 +1,10 @@
+To do
+
+init:
+- get and cache wifi spots data
+
+on click:
+- find me. get lat and long from html5 geolocation
+- show me as center in google map 
+- show layer with points for nearest three wifi spots
+- list info about the points below the map
