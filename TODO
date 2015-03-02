@@ -1,10 +1,12 @@
 To do
 
 init:
-- get and cache wifi spots data
+- check localStorage for wifi spots data
+- if none, get and cache wifi data
 
 on click:
-- find me. get lat and long from html5 geolocation
+x find me. get lat and long from html5 geolocation
 - show me as center in google map 
-- show layer with points for nearest three wifi spots
-- list info about the points below the map
+- use Haversine to find three closest spots
+- show map layer with only those three spots
+- list spot info below
