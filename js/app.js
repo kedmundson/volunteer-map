@@ -3,22 +3,23 @@
 (function () {
 
   var model = {
-    wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json',
-    usernameToken: ''
+    wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json'
   };
   
   var controller = {
     init: function() {
       view.init();
+      this.getWifiData();
     },
 
-    getData: function() {
-      $.ajax({
-          url: model.wifiURL
-        })
-        .done(function(data) {
-          console.log(data);
-        });
+    getWifiData: function() {
+      $.getJSON(model.wifiURL, function(result) {
+        console.log(result.data.length);
+        for (var i = 0; i < result.data.length; i++) {
+          console.log('name of spot is: ' + result.data[i][12]);
+        }
+      });
+
     },
 
     showResults: function() {}
@@ -28,7 +29,6 @@
   var view = {
     init: function() {
       var $results = $('#results');
-      controller.getData();
     }
 
   };
