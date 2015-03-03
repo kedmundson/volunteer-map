@@ -4,10 +4,11 @@ init:
 x check localStorage for wifi spots data
   x if none, get wifi data
   x save to local storage
+x make new google map with nyc as center
 
 on click:
 x find me. get lat and long from html5 geolocation
-- show me as center in google map 
+x update me as center in map
 - getPoints from localStorage
 - use Haversine to find three closest spots
 - show map layer with only those three spots

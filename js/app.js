@@ -1,4 +1,5 @@
-// Based on info from: https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn
+// Based on public data from the City of New York:
+// https://data.cityofnewyork.us/Social-Services/NYC-Wi-Fi-Hotspot-Locations/a9we-mtpn
 
 (function () {
 
@@ -41,18 +42,16 @@
       view.init();
     },
 
-    showResults: function() {},
-
     getGeolocation: function() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(controller.delegateGeoInfo);
+        navigator.geolocation.getCurrentPosition(controller.useGeo);
       } else {
         view.error("Geolocation is not supported by your browser");
       }
     },
 
-    delegateGeoInfo: function(position) {
-      view.showLatLong(position);
+    useGeo: function(position) {
+      view.recenterMap(position.coords.latitude, position.coords.longitude);
       controller.getClosestPoints(position);
     },
 
@@ -72,7 +71,9 @@
 
       // Return the first three items. 
     
-    }
+    },
+
+    showResults: function() {}
 
   };
 
@@ -83,6 +84,10 @@
       this.$error = $('#error');
       this.$findBtn = $('#find');
       this.$map = $('#map');
+      this.googleMap;
+      this.myLatLng;
+
+      this.newGoogleMap(40.7127, -74.0059); // default to NYC
 
       this.$findBtn.click(function() {
         controller.getGeolocation();
@@ -96,6 +101,34 @@
     showLatLong: function(position) {
       this.$results.html('Latitude: ' + position.coords.latitude +
                     '<br /> Longitude: ' + position.coords.longitude);
+    },
+
+    newGoogleMap: function(lat, lng) {
+      var mapOptions = {
+        zoom: 11,
+        center: new google.maps.LatLng(lat, lng)
+      };
+      this.googleMap = new google.maps.Map(this.$map[0], mapOptions);
+    },
+
+    recenterMap: function(lat, lng) {
+      this.myLatLng = new google.maps.LatLng(lat, lng);
+      this.googleMap.setCenter(this.myLatLng);
+      this.googleMap.setZoom(16);
+      new google.maps.Marker({  
+        map: this.googleMap,
+        position: this.myLatLng,
+        icon: this.customMarker
+      });
+    },
+
+    customMarker: {
+      path: 'M-7,0a7,7 0 1,0 14,0a7,7 0 1,0 -14,0',
+      fillColor: 'blue',
+      fillOpacity: 0.6,
+      scale: 1,
+      strokeColor: 'white',
+      strokeWeight: 3
     }
 
   };
