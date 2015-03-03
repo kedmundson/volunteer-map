@@ -10,6 +10,8 @@ on click:
 x find me. get lat and long from html5 geolocation
 x update me as center in map
 - getPoints from localStorage
-- use Haversine to find three closest spots
-- show map layer with only those three spots
-- list spot info below
+- use Haversine to find three closest points
+- add markers for those three points
+- extend bounds, zoom to new bounds
+- add onclick events for all new markers
+- list point info below
