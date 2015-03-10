@@ -8,6 +8,7 @@
     wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json',
 
     init: function() {
+      // TODO: check for local storage availability
       if (!localStorage.wifiData) {
         this.getWifiJSON();
       } else {
@@ -18,20 +19,37 @@
     getWifiJSON: function() {
       $.ajax({ url: this.wifiURL })
             .done(function(result) {
-              // Save result to local storage
-              localStorage.wifiData = JSON.stringify(result.data);
-              console.log('Saved wifiData to localStorage.');
+              model.saveUsefulData(result.data);
             });
+    },
+
+    saveUsefulData: function(data) { 
+      // save only the useful fields in a new array of objects
+      var wifiData = [],
+          point;
+
+      for (var i = 0; i < data.length; i++) {
+        point = {
+          name: data[i][12],
+          summary: data[i][13],
+          lat: data[i][14],
+          lng: data[i][15],
+          type: data[i][18],
+          remarks: data[i][19],
+          ssid: data[i][21]
+        };
+        wifiData.push(point);
+        console.log(point.name);
+      }
+
+      // Save result to local storage
+      localStorage.wifiData = JSON.stringify(wifiData);
+      console.log('Saved wifiData to localStorage.');
     },
 
     getPoints: function() {
       return JSON.parse(localStorage.wifiData);
-
-      // Spot name: result.data[i][12] 
-      // Lat: result.data[i][14]
-      // Long: result.data[i][15]
     }
-
 
   };
   
@@ -50,25 +68,31 @@
       }
     },
 
-    useGeo: function(position) {
-      view.recenterMap(position.coords.latitude, position.coords.longitude);
-      controller.getClosestPoints(position);
+    useGeo: function(myposition) {
+      view.recenterMap(myposition.coords.latitude, myposition.coords.longitude);
+      controller.getClosestPoints(myposition);
     },
 
-    getClosestPoints: function (position) {
-      // pull in points from model.getPoints
+    getClosestPoints: function (myposition) {
+      var pi = Math.PI,
+          radius = 3959, // Earth's radius in miles
+          // Convert myposition lat + long from degrees to radians
+          posLatRdn = myposition.coords.latitude * (pi / 180),
+          posLngRdn = myposition.coords.longitude * (pi / 180),
+          points = model.getPoints(),
+          pointLatRdn,
+          pointLngRdn;
 
-      // First convert position lat + long from degrees to radians
+      for (var i = 0; i < points.length; i++) {
+        // For each point's lat + long, convert degrees to radians
+        pointLatRdn = points[i].lat * (pi / 180);
+        pointLngRdn = points[i].lng * (pi / 180);
+        // Plug four values into Haversine formula to get distance from me to point
+        // Add point to an array.
 
-      // Next loop through array of points. 
-      // For each point's lat + long, convert degrees to radians,
-      // then plug all four values into Haversine formula to get
-      // distance from me to point.
-      // Add point to an array.
-
+      }
       // After the loop completes, sort the array in ascending order
       // of the new distance value.
-
       // Return the first three items. 
     
     },
@@ -98,9 +122,9 @@
       this.$error.html(message);
     },
 
-    showLatLong: function(position) {
-      this.$results.html('Latitude: ' + position.coords.latitude +
-                    '<br /> Longitude: ' + position.coords.longitude);
+    showLatLong: function(myposition) {
+      this.$results.html('Latitude: ' + myposition.coords.latitude +
+                    '<br /> Longitude: ' + myposition.coords.longitude);
     },
 
     newGoogleMap: function(lat, lng) {
