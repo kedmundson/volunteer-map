@@ -36,10 +36,10 @@
           lng: data[i][15],
           type: data[i][18],
           remarks: data[i][19],
-          ssid: data[i][21]
+          ssid: data[i][21],
+          distanceFromMe: 0
         };
         wifiData.push(point);
-        console.log(point.name);
       }
 
       // Save result to local storage
@@ -68,31 +68,46 @@
       }
     },
 
-    useGeo: function(myposition) {
-      view.recenterMap(myposition.coords.latitude, myposition.coords.longitude);
-      controller.getClosestPoints(myposition);
+    useGeo: function(mypos) {
+      view.recenterMap(mypos.coords.latitude, mypos.coords.longitude);
+      controller.getClosestPoints(mypos);
     },
 
-    getClosestPoints: function (myposition) {
+    getClosestPoints: function (mypos) {
       var pi = Math.PI,
           radius = 3959, // Earth's radius in miles
-          // Convert myposition lat + long from degrees to radians
-          posLatRdn = myposition.coords.latitude * (pi / 180),
-          posLngRdn = myposition.coords.longitude * (pi / 180),
+          // Convert mypos lat + long from degrees to radians
+          posLatRdn = mypos.coords.latitude * (pi / 180),
+          posLngRdn = mypos.coords.longitude * (pi / 180),
           points = model.getPoints(),
           pointLatRdn,
-          pointLngRdn;
+          pointLngRdn,
+          dLat,
+          dLng;
 
       for (var i = 0; i < points.length; i++) {
+
         // For each point's lat + long, convert degrees to radians
         pointLatRdn = points[i].lat * (pi / 180);
         pointLngRdn = points[i].lng * (pi / 180);
-        // Plug four values into Haversine formula to get distance from me to point
-        // Add point to an array.
 
+        // Plug four values into Haversine formula to get distance from me to point
+        dLat = pointLatRdn - posLatRdn;
+        dLng = pointLngRdn - posLngRdn;
+        a = Math.sin(dLat / 2) * Math.sin(dLat /2) + Math.sin(dLng / 2) *
+            Math.sin(dLng /2) * Math.cos(posLatRdn) * Math.cos(pointLatRdn);
+        c = 2 * Math.asin(Math.sqrt(a));
+
+        // Update each point's distanceFromMe key with the final distance value 
+        points[i].distanceFromMe = radius * c;
       }
-      // After the loop completes, sort the array in ascending order
-      // of the new distance value.
+
+      // Now that all the point distances are updated, sort the points array 
+      // in ascending order by the new distance value
+      points.sort(function(a, b) {
+        // sort that
+      });
+
       // Return the first three items. 
     
     },
@@ -122,9 +137,9 @@
       this.$error.html(message);
     },
 
-    showLatLong: function(myposition) {
-      this.$results.html('Latitude: ' + myposition.coords.latitude +
-                    '<br /> Longitude: ' + myposition.coords.longitude);
+    showLatLong: function(mypos) {
+      this.$results.html('Latitude: ' + mypos.coords.latitude +
+                    '<br /> Longitude: ' + mypos.coords.longitude);
     },
 
     newGoogleMap: function(lat, lng) {
