@@ -47,9 +47,11 @@
       console.log('Saved wifiData to localStorage.');
     },
 
-    getPoints: function() {
+    getAllPoints: function() {
       return JSON.parse(localStorage.wifiData);
-    }
+    },
+
+    closestPoints: []
 
   };
   
@@ -82,7 +84,7 @@
           // Convert mypos lat + long from degrees to radians
           posLatRdn = mypos.coords.latitude * (pi / 180),
           posLngRdn = mypos.coords.longitude * (pi / 180),
-          points = model.getPoints(),
+          points = model.getAllPoints(),
           pointLatRdn,
           pointLngRdn,
           dLat,
@@ -112,12 +114,18 @@
         return a.distanceFromMe - b.distanceFromMe;
       });
 
-      // Return the first three items, i.e. the closest points to me 
-      return points.slice(0, 3);
-    
+      // Save the first five items, i.e. the closest points to me
+      model.closestPoints = points.slice(0, 5);
+
+      // Send them to the marker factory
+      for (var i = 0; i < model.closestPoints.length; i++) {
+        view.wifiMarker(model.closestPoints[i]);
+      }
     },
 
-    showResults: function() {}
+    showResults: function() {
+      // list results info below map
+    }
 
   };
 
@@ -175,10 +183,10 @@
       strokeWeight: 3
     },
 
-    wifiMarker: function() {
+    wifiMarker: function(point) {
       new google.maps.Marker({  
         map: this.googleMap,
-        // position: point latLng
+        position: new google.maps.LatLng(point.lat, point.lng)
       });
     }
 
