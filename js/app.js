@@ -89,7 +89,6 @@
           dLng;
 
       for (var i = 0; i < points.length; i++) {
-
         // For each point's lat + long, convert degrees to radians
         pointLatRdn = points[i].lat * (pi / 180);
         pointLngRdn = points[i].lng * (pi / 180);
@@ -113,10 +112,8 @@
         return a.distanceFromMe - b.distanceFromMe;
       });
 
-      // Return the first three items. 
-      for (var i = 0; i < 3; i++) {
-        console.log(points[i]);
-      }
+      // Return the first three items, i.e. the closest points to me 
+      return points.slice(0, 3);
     
     },
 
@@ -176,6 +173,13 @@
       scale: 1,
       strokeColor: 'white',
       strokeWeight: 3
+    },
+
+    wifiMarker: function() {
+      new google.maps.Marker({  
+        map: this.googleMap,
+        // position: point latLng
+      });
     }
 
   };
