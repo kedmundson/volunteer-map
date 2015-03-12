@@ -74,6 +74,9 @@
     },
 
     getClosestPoints: function (mypos) {
+      // Use the Haversine formula to determine the three closest
+      // wifi points to the user's location. Steps commented below.
+
       var pi = Math.PI,
           radius = 3959, // Earth's radius in miles
           // Convert mypos lat + long from degrees to radians
@@ -91,9 +94,11 @@
         pointLatRdn = points[i].lat * (pi / 180);
         pointLngRdn = points[i].lng * (pi / 180);
 
-        // Plug four values into Haversine formula to get distance from me to point
+        // Get the difference between the two latitudes and longitudes
         dLat = pointLatRdn - posLatRdn;
         dLng = pointLngRdn - posLngRdn;
+
+        // Plug the values in
         a = Math.sin(dLat / 2) * Math.sin(dLat /2) + Math.sin(dLng / 2) *
             Math.sin(dLng /2) * Math.cos(posLatRdn) * Math.cos(pointLatRdn);
         c = 2 * Math.asin(Math.sqrt(a));
@@ -105,10 +110,13 @@
       // Now that all the point distances are updated, sort the points array 
       // in ascending order by the new distance value
       points.sort(function(a, b) {
-        // sort that
+        return a.distanceFromMe - b.distanceFromMe;
       });
 
       // Return the first three items. 
+      for (var i = 0; i < 3; i++) {
+        console.log(points[i]);
+      }
     
     },
 
