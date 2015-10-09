@@ -6,4 +6,4 @@ free WiFi points to you within the five boroughs.
 This is a work in progress. See TODO file to get an idea
 of the remaining tasks. 
 
-See it (grow) in a browser at kateedmundson.com/wifinyc
+See it (grow) in a browser at http://wifinyc.info
