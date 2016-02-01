@@ -8,11 +8,15 @@
     wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json',
 
     init: function() {
-      // TODO: check for local storage availability
-      if (!localStorage.wifiData) {
-        this.getWifiJSON();
+      // check for local storage availability
+      if(typeof(Storage) !== "undefined") {
+        if (!localStorage.wifiData) {
+          this.getWifiJSON();
+        } else {
+          console.log('localStorage.wifiData is ready.');
+        }
       } else {
-        console.log('localStorage.wifiData is ready.');
+        // TODO: support no localStorage case
       }
     },
 
@@ -157,7 +161,7 @@
 
     newGoogleMap: function(lat, lng) {
       var mapOptions = {
-        zoom: 11,
+        zoom: 10,
         center: new google.maps.LatLng(lat, lng)
       };
       this.googleMap = new google.maps.Map(this.$map[0], mapOptions);
