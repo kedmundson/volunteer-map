@@ -8,15 +8,9 @@
     wifiURL: 'https://nycopendata.socrata.com/api/views/jd4g-ks2z/rows.json',
 
     init: function() {
-      // check for local storage availability
-      if(typeof(Storage) !== "undefined") {
-        if (!localStorage.wifiData) {
-          this.getWifiJSON();
-        } else {
-          console.log('localStorage.wifiData is ready.');
-        }
-      } else {
-        // TODO: support no localStorage case
+      // Pre-load the data if we don't already have it saved in local storage
+      if (!localStorage.wifiData) {
+        this.getWifiJSON();
       }
     },
 
@@ -48,7 +42,6 @@
 
       // Save result to local storage
       localStorage.wifiData = JSON.stringify(wifiData);
-      console.log('Saved wifiData to localStorage.');
     },
 
     getAllPoints: function() {
